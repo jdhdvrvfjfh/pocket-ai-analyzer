@@ -25,3 +25,11 @@ if st.button("Analyze Text"):
             st.write(f"{word}: {count}")
     else:
         st.warning("Please enter some text first.")
+st.header("🖼️ Image Analysis")
+uploaded_image = st.file_uploader(
+    "Upload a chart image",
+    type=["png", "jpg", "jpeg"]
+)
+
+if uploaded_image is not None:
+    st.image(uploaded_image, caption="Uploaded Chart")
