@@ -193,3 +193,33 @@ st.divider()
 st.caption(
     "Pocket AI Analyzer | Educational Project"
 )
+st.divider()
+st.header("📊 اختبار دقة التحليل التاريخي")
+
+st.write(
+    "يساعد هذا القسم على تقييم دقة تصنيف الاتجاهات "
+    "باستخدام بيانات تاريخية، ولا يقدم توقعات أو إشارات تداول."
+)
+
+uploaded_data = st.file_uploader(
+    "ارفع ملف بيانات تاريخية بصيغة CSV",
+    type=["csv"],
+    key="historical_data"
+)
+
+if uploaded_data is not None:
+    import pandas as pd
+
+    try:
+        data = pd.read_csv(uploaded_data)
+
+        st.write("معاينة البيانات:")
+        st.dataframe(data.head())
+
+        st.info(
+            "تم تحميل البيانات. الخطوة التالية ستكون "
+            "التحقق من أعمدتها وإعداد اختبار دقة مناسب."
+        )
+
+    except Exception as error:
+        st.error(f"تعذر قراءة الملف: {error}")
