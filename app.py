@@ -1,225 +1,127 @@
 
 import streamlit as st
-from collections import Counter
-import re
+import pandas as pd
 
-# إعداد الصفحة
 st.set_page_config(
     page_title="Pocket AI Analyzer",
     page_icon="📊",
     layout="wide"
 )
 
-# تصميم التطبيق
 st.title("📊 Pocket AI Analyzer")
-st.subheader("المحلل التعليمي للرسوم البيانية")
-st.write("ارفع صورة الرسم البياني للحصول على شرح تعليمي للعناصر الظاهرة.")
+st.caption("أداة تعليمية لفهم الرسوم البيانية وقياس دقة التصنيف التاريخي")
 
-st.divider()
-
-# القائمة الجانبية
-st.sidebar.title("⚙️ القائمة الرئيسية")
-
-page = st.sidebar.radio(
-    "اختر القسم:",
-    [
-        "تحليل الصور",
-        "تحليل النصوص",
-        "شرح المؤشرات",
-        "حول التطبيق"
-    ]
+st.info(
+    "هذه الأداة تعليمية. لا تقدم إشارات شراء أو بيع، "
+    "ولا تتنبأ بنتائج الصفقات."
 )
 
-# قسم تحليل الصور
-if page == "تحليل الصور":
+st.header("🖼️ تحليل الرسم البياني")
 
-    st.header("🖼️ رفع صورة الرسم البياني")
+image_file = st.file_uploader(
+    "ارفع صورة الرسم البياني",
+    type=["png", "jpg", "jpeg"]
+)
 
-    uploaded_image = st.file_uploader(
-        "اختر صورة:",
-        type=["png", "jpg", "jpeg"]
+if image_file:
+    st.image(
+        image_file,
+        caption="الرسم البياني المرفوع",
+        use_container_width=True
     )
 
-    if uploaded_image is not None:
-
-        st.image(
-            uploaded_image,
-            caption="الرسم البياني المرفوع",
-            use_container_width=True
-        )
-
-        st.success("تم رفع الصورة بنجاح!")
-
-        st.divider()
-
-        st.header("📈 عناصر التحليل التعليمي")
-
-        st.subheader("1️⃣ مؤشر RSI")
-        st.write(
-            "يُستخدم مؤشر RSI لدراسة زخم الحركة "
-            "ومعرفة ما إذا كان المؤشر في مناطق مرتفعة أو منخفضة."
-        )
-
-        st.subheader("2️⃣ مؤشر MACD")
-        st.write(
-            "يساعد MACD على دراسة الزخم "
-            "والتقاطع بين خطوط المؤشر."
-        )
-
-        st.subheader("3️⃣ المتوسطات المتحركة")
-        st.write(
-            "تساعد المتوسطات المتحركة على فهم "
-            "الاتجاه العام للحركة السعرية."
-        )
-
-        st.subheader("4️⃣ الشموع اليابانية")
-        st.write(
-            "يمكن دراسة أجسام الشموع والظلال "
-            "والأنماط المختلفة لفهم حركة السعر."
-        )
-
-        st.subheader("5️⃣ الدعم والمقاومة")
-        st.write(
-            "مناطق سعرية تعليمية تساعد على دراسة "
-            "المستويات التي ظهر عندها تغير في الحركة."
-        )
-
-        st.subheader("6️⃣ الاتجاه العام")
-
-        direction = st.selectbox(
-            "اختر الاتجاه الذي تلاحظه في الرسم:",
-            [
-                "غير محدد",
-                "اتجاه صاعد",
-                "اتجاه هابط",
-                "اتجاه جانبي"
-            ]
-        )
-
-        st.write("الاتجاه المختار:", direction)
-
-        st.divider()
-
-        st.header("📝 التقرير التعليمي")
-
-        st.info(
-            "تم رفع الصورة. الأقسام السابقة تشرح المؤشرات "
-            "التي يمكنك دراستها في الرسم البياني. "
-            "هذا الإصدار لا يستخرج قراءات المؤشرات تلقائياً "
-            "من الصورة ولا يقدم توصيات تداول."
-        )
-
-# قسم تحليل النصوص
-elif page == "تحليل النصوص":
-
-    st.header("📝 تحليل النصوص")
-
-    text = st.text_area("اكتب النص هنا:")
-
-    if st.button("تحليل النص"):
-
-        if text.strip():
-
-            words = re.findall(
-                r"\b\w+\b",
-                text.lower()
-            )
-
-            st.subheader("نتائج التحليل")
-
-            st.write("عدد الأحرف:", len(text))
-            st.write("عدد الكلمات:", len(words))
-            st.write("الكلمات الفريدة:", len(set(words)))
-
-            common = Counter(words).most_common(5)
-
-            st.subheader("أكثر الكلمات تكراراً")
-
-            for word, count in common:
-                st.write(f"{word}: {count}")
-
-        else:
-            st.warning("يرجى كتابة نص أولاً.")
-
-# قسم شرح المؤشرات
-elif page == "شرح المؤشرات":
-
-    st.header("📚 مكتبة المؤشرات التعليمية")
-
-    with st.expander("RSI"):
-        st.write(
-            "مؤشر القوة النسبية، ويستخدم لدراسة زخم السعر."
-        )
-
-    with st.expander("MACD"):
-        st.write(
-            "مؤشر يساعد على دراسة الزخم والتغيرات في الاتجاه."
-        )
-
-    with st.expander("Moving Average"):
-        st.write(
-            "المتوسط المتحرك يساعد على تنعيم حركة السعر."
-        )
-
-    with st.expander("Candlesticks"):
-        st.write(
-            "الشموع اليابانية تعرض معلومات عن الافتتاح "
-            "والإغلاق وأعلى وأدنى سعر."
-        )
-
-    with st.expander("Support & Resistance"):
-        st.write(
-            "الدعم والمقاومة مفهومان لدراسة مستويات السعر."
-        )
-
-# حول التطبيق
-elif page == "حول التطبيق":
-
-    st.header("ℹ️ حول Pocket AI Analyzer")
+    st.subheader("وصف الرسم البياني")
 
     st.write(
-        "مشروع تعليمي لدراسة النصوص والرسوم البيانية "
-        "وفهم المؤشرات الفنية."
+        "تم تحميل الصورة بنجاح. يمكن استخدام هذا القسم "
+        "لتسجيل ملاحظات تعليمية عن الشموع والاتجاه والمؤشرات."
     )
 
-    st.warning(
-        "التطبيق لا يقدم إشارات شراء أو بيع، "
-        "ولا يتنبأ بنتائج الصفقات."
+    direction = st.selectbox(
+        "ما الاتجاه الذي تلاحظه في الرسم؟",
+        ["غير محدد", "صاعد", "هابط", "جانبي"]
     )
 
-# أسفل الصفحة
+    st.write("الاتجاه الذي اخترته:", direction)
+
 st.divider()
 
-st.caption(
-    "Pocket AI Analyzer | Educational Project"
+st.header("📈 المؤشرات الفنية")
+
+indicator = st.selectbox(
+    "اختر المؤشر الذي تريد معرفة المزيد عنه",
+    ["RSI", "MACD", "المتوسطات المتحركة", "الشموع اليابانية"]
 )
+
+explanations = {
+    "RSI": "مؤشر RSI يقيس زخم حركة السعر، ويتراوح عادة بين 0 و100.",
+    "MACD": "مؤشر MACD يساعد على دراسة الزخم والعلاقة بين متوسطات السعر.",
+    "المتوسطات المتحركة": "تساعد على تلخيص حركة السعر خلال فترات زمنية مختلفة.",
+    "الشموع اليابانية": "تعرض الشموع أسعار الافتتاح والإغلاق وأعلى وأدنى سعر."
+}
+
+st.info(explanations[indicator])
+
 st.divider()
-st.header("📊 اختبار دقة التحليل التاريخي")
+
+st.header("🧪 اختبار الدقة التاريخية")
 
 st.write(
-    "يساعد هذا القسم على تقييم دقة تصنيف الاتجاهات "
-    "باستخدام بيانات تاريخية، ولا يقدم توقعات أو إشارات تداول."
+    "ارفع بيانات تاريخية بصيغة CSV تحتوي على نتائج تصنيف سابقة "
+    "وقيم التصنيف الفعلية، لقياس دقة النموذج."
 )
 
-uploaded_data = st.file_uploader(
-    "ارفع ملف بيانات تاريخية بصيغة CSV",
+data_file = st.file_uploader(
+    "اختر ملف بيانات الاختبار CSV",
     type=["csv"],
-    key="historical_data"
+    key="historical_csv"
 )
 
-if uploaded_data is not None:
-    import pandas as pd
-
+if data_file:
     try:
-        data = pd.read_csv(uploaded_data)
+        data = pd.read_csv(data_file)
 
         st.write("معاينة البيانات:")
         st.dataframe(data.head())
 
-        st.info(
-            "تم تحميل البيانات. الخطوة التالية ستكون "
-            "التحقق من أعمدتها وإعداد اختبار دقة مناسب."
-        )
+        required_columns = ["actual", "predicted"]
+
+        if all(col in data.columns for col in required_columns):
+            valid = data.dropna(subset=required_columns)
+
+            if len(valid) > 0:
+                accuracy = (
+                    valid["actual"].astype(str).str.strip()
+                    == valid["predicted"].astype(str).str.strip()
+                ).mean() * 100
+
+                st.metric(
+                    "دقة التصنيف في بيانات الاختبار",
+                    f"{accuracy:.2f}%"
+                )
+
+                st.caption(
+                    "هذه نتيجة اختبار على البيانات المرفوعة، "
+                    "وليست احتمال نجاح صفقة مستقبلية."
+                )
+            else:
+                st.warning("لا توجد بيانات صالحة للاختبار.")
+        else:
+            st.warning(
+                "يجب أن يحتوي الملف على عمودين: "
+                "actual و predicted."
+            )
 
     except Exception as error:
         st.error(f"تعذر قراءة الملف: {error}")
+
+st.divider()
+
+st.header("ℹ️ حول التطبيق")
+
+st.write(
+    "Pocket AI Analyzer مشروع تعليمي يساعد على فهم الرسوم البيانية "
+    "والمؤشرات الفنية وقياس أداء التصنيف على بيانات تاريخية."
+)
+
+st.caption("الإصدار 2.0")
