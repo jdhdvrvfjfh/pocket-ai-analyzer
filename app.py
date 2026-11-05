@@ -3,75 +3,193 @@ import streamlit as st
 from collections import Counter
 import re
 
-# إعدادات الصفحة
+# إعداد الصفحة
 st.set_page_config(
     page_title="Pocket AI Analyzer",
     page_icon="📊",
-    layout="centered"
+    layout="wide"
 )
 
-# العنوان الرئيسي
+# تصميم التطبيق
 st.title("📊 Pocket AI Analyzer")
-st.write("أداة تعليمية لتحليل النصوص والصور.")
+st.subheader("المحلل التعليمي للرسوم البيانية")
+st.write("ارفع صورة الرسم البياني للحصول على شرح تعليمي للعناصر الظاهرة.")
 
 st.divider()
 
-# تحليل النصوص
-st.header("📝 تحليل النصوص")
+# القائمة الجانبية
+st.sidebar.title("⚙️ القائمة الرئيسية")
 
-text = st.text_area("أدخل النص هنا:")
-
-if st.button("تحليل النص"):
-    if text.strip():
-        words = re.findall(r"\b\w+\b", text.lower())
-
-        st.subheader("📊 نتائج التحليل")
-        st.write("عدد الأحرف:", len(text))
-        st.write("عدد الكلمات:", len(words))
-        st.write("عدد الكلمات الفريدة:", len(set(words)))
-
-        common = Counter(words).most_common(5)
-
-        st.subheader("🔤 أكثر الكلمات تكراراً")
-
-        for word, count in common:
-            st.write(f"{word}: {count}")
-
-    else:
-        st.warning("يرجى إدخال نص أولاً.")
-
-st.divider()
-
-# تحليل الصور
-st.header("🖼️ تحليل الصور")
-
-uploaded_image = st.file_uploader(
-    "ارفع صورة الرسم البياني هنا:",
-    type=["png", "jpg", "jpeg"]
+page = st.sidebar.radio(
+    "اختر القسم:",
+    [
+        "تحليل الصور",
+        "تحليل النصوص",
+        "شرح المؤشرات",
+        "حول التطبيق"
+    ]
 )
 
-if uploaded_image is not None:
+# قسم تحليل الصور
+if page == "تحليل الصور":
 
-    st.image(
-        uploaded_image,
-        caption="الصورة المرفوعة",
-        use_container_width=True
+    st.header("🖼️ رفع صورة الرسم البياني")
+
+    uploaded_image = st.file_uploader(
+        "اختر صورة:",
+        type=["png", "jpg", "jpeg"]
     )
 
-    st.success("تم رفع الصورة بنجاح!")
+    if uploaded_image is not None:
 
-    st.subheader("📊 التحليل التعليمي للرسم البياني")
+        st.image(
+            uploaded_image,
+            caption="الرسم البياني المرفوع",
+            use_container_width=True
+        )
 
-    st.info(
-        "يمكنك استخدام الصورة لدراسة الأنماط "
-        "والاتجاهات الظاهرة في الرسوم البيانية."
-    )
+        st.success("تم رفع الصورة بنجاح!")
+
+        st.divider()
+
+        st.header("📈 عناصر التحليل التعليمي")
+
+        st.subheader("1️⃣ مؤشر RSI")
+        st.write(
+            "يُستخدم مؤشر RSI لدراسة زخم الحركة "
+            "ومعرفة ما إذا كان المؤشر في مناطق مرتفعة أو منخفضة."
+        )
+
+        st.subheader("2️⃣ مؤشر MACD")
+        st.write(
+            "يساعد MACD على دراسة الزخم "
+            "والتقاطع بين خطوط المؤشر."
+        )
+
+        st.subheader("3️⃣ المتوسطات المتحركة")
+        st.write(
+            "تساعد المتوسطات المتحركة على فهم "
+            "الاتجاه العام للحركة السعرية."
+        )
+
+        st.subheader("4️⃣ الشموع اليابانية")
+        st.write(
+            "يمكن دراسة أجسام الشموع والظلال "
+            "والأنماط المختلفة لفهم حركة السعر."
+        )
+
+        st.subheader("5️⃣ الدعم والمقاومة")
+        st.write(
+            "مناطق سعرية تعليمية تساعد على دراسة "
+            "المستويات التي ظهر عندها تغير في الحركة."
+        )
+
+        st.subheader("6️⃣ الاتجاه العام")
+
+        direction = st.selectbox(
+            "اختر الاتجاه الذي تلاحظه في الرسم:",
+            [
+                "غير محدد",
+                "اتجاه صاعد",
+                "اتجاه هابط",
+                "اتجاه جانبي"
+            ]
+        )
+
+        st.write("الاتجاه المختار:", direction)
+
+        st.divider()
+
+        st.header("📝 التقرير التعليمي")
+
+        st.info(
+            "تم رفع الصورة. الأقسام السابقة تشرح المؤشرات "
+            "التي يمكنك دراستها في الرسم البياني. "
+            "هذا الإصدار لا يستخرج قراءات المؤشرات تلقائياً "
+            "من الصورة ولا يقدم توصيات تداول."
+        )
+
+# قسم تحليل النصوص
+elif page == "تحليل النصوص":
+
+    st.header("📝 تحليل النصوص")
+
+    text = st.text_area("اكتب النص هنا:")
+
+    if st.button("تحليل النص"):
+
+        if text.strip():
+
+            words = re.findall(
+                r"\b\w+\b",
+                text.lower()
+            )
+
+            st.subheader("نتائج التحليل")
+
+            st.write("عدد الأحرف:", len(text))
+            st.write("عدد الكلمات:", len(words))
+            st.write("الكلمات الفريدة:", len(set(words)))
+
+            common = Counter(words).most_common(5)
+
+            st.subheader("أكثر الكلمات تكراراً")
+
+            for word, count in common:
+                st.write(f"{word}: {count}")
+
+        else:
+            st.warning("يرجى كتابة نص أولاً.")
+
+# قسم شرح المؤشرات
+elif page == "شرح المؤشرات":
+
+    st.header("📚 مكتبة المؤشرات التعليمية")
+
+    with st.expander("RSI"):
+        st.write(
+            "مؤشر القوة النسبية، ويستخدم لدراسة زخم السعر."
+        )
+
+    with st.expander("MACD"):
+        st.write(
+            "مؤشر يساعد على دراسة الزخم والتغيرات في الاتجاه."
+        )
+
+    with st.expander("Moving Average"):
+        st.write(
+            "المتوسط المتحرك يساعد على تنعيم حركة السعر."
+        )
+
+    with st.expander("Candlesticks"):
+        st.write(
+            "الشموع اليابانية تعرض معلومات عن الافتتاح "
+            "والإغلاق وأعلى وأدنى سعر."
+        )
+
+    with st.expander("Support & Resistance"):
+        st.write(
+            "الدعم والمقاومة مفهومان لدراسة مستويات السعر."
+        )
+
+# حول التطبيق
+elif page == "حول التطبيق":
+
+    st.header("ℹ️ حول Pocket AI Analyzer")
 
     st.write(
-        "هذا التطبيق يعرض الصورة لأغراض تعليمية، "
-        "ولا يقدم توصيات شراء أو بيع أو يتنبأ بالأسعار."
+        "مشروع تعليمي لدراسة النصوص والرسوم البيانية "
+        "وفهم المؤشرات الفنية."
     )
 
+    st.warning(
+        "التطبيق لا يقدم إشارات شراء أو بيع، "
+        "ولا يتنبأ بنتائج الصفقات."
+    )
+
+# أسفل الصفحة
 st.divider()
 
-st.caption("Pocket AI Analyzer | مشروع تعليمي")
+st.caption(
+    "Pocket AI Analyzer | Educational Project"
+)
